@@ -18,11 +18,14 @@ import java.nio.file.Files
 
 import java.nio.file.{Path, Paths}
 
-class FtpClient(host: String, port: Int, user: String, password: String) {
+object FtpClient {
   sealed trait FileType
   case object BinaryFile extends FileType
   case object AsciiFile extends FileType
+}
 
+class FtpClient(host: String, port: Int, user: String, password: String) {
+  import FtpClient._
 
   def fetchFile(remoteFile: String, localDirectory: String, fileType: FileType = AsciiFile)(implicit context: ExecutionContext): Future[Path] = {
     Logger.debug(s"fetchFile(remoteFile: $remoteFile, localDirectory: $localDirectory, fileType: $fileType)")
