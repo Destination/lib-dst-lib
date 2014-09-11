@@ -1,7 +1,6 @@
 package dst.lib.io
 
 import play.api.Play
-import play.Logger
 
 import scala.concurrent._
 import scala.concurrent.duration._
@@ -27,9 +26,8 @@ object FtpClient {
 class FtpClient(host: String, port: Int, user: String, password: String) {
   import FtpClient._
 
-  def fetchFile(remoteFile: String, localDirectory: String, fileType: FileType = AsciiFile)(implicit context: ExecutionContext): Future[Path] = {
-    Logger.debug(s"fetchFile(remoteFile: $remoteFile, localDirectory: $localDirectory, fileType: $fileType)")
-    Files.createDirectories(Paths.get(localDirectory))
+  def fetchFile(remoteFile: String, localDirectory: Path, fileType: FileType = AsciiFile)(implicit context: ExecutionContext): Future[Path] = {
+    Files.createDirectories(localDirectory)
 
     val remoteFilePath = Paths.get(remoteFile)
     val remoteDirectory = remoteFilePath.getParent.toString
@@ -48,8 +46,8 @@ class FtpClient(host: String, port: Int, user: String, password: String) {
   }
 
 
-  def fetchFiles(remoteDirectory: String, localDirectory: String, fileType: FileType = AsciiFile, filter: (String) => Boolean = _ => true)(implicit context: ExecutionContext): Future[List[Path]] = {
-    Files.createDirectories(Paths.get(localDirectory))
+  def fetchFiles(remoteDirectory: String, localDirectory: Path, fileType: FileType = AsciiFile, filter: (String) => Boolean = _ => true)(implicit context: ExecutionContext): Future[List[Path]] = {
+    Files.createDirectories(localDirectory)
 
     for {
       ftpClient         <- connect()(context)
@@ -66,8 +64,6 @@ class FtpClient(host: String, port: Int, user: String, password: String) {
   }
 
   private def connect()(implicit context: ExecutionContext): Future[FTPClient] = future {
-    Logger.debug("connect")
-
     val ftpClient = new FTPClient()
     ftpClient.connect(host, port)
 
@@ -95,9 +91,9 @@ class FtpClient(host: String, port: Int, user: String, password: String) {
     }
   }
 
-  private def downloadFile(remoteFile: String, localDirectory: String)(implicit ftpClient: FTPClient, context: ExecutionContext): Future[Path] = future {
+  private def downloadFile(remoteFile: String, localDirectory: Path)(implicit ftpClient: FTPClient, context: ExecutionContext): Future[Path] = future {
     val remoteName = Paths.get(remoteFile).getFileName.toString
-    val outputPath = Paths.get(localDirectory, remoteName).normalize
+    val outputPath = localDirectory.resolve(remoteName).normalize
     val outputStream = Files.newOutputStream(outputPath);
 
     try {
