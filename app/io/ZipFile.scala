@@ -42,7 +42,7 @@ object ZipFile {
     }
   }
 
-  private def ungzipFile(gzipFilePath: Path, unzipDirectory: Path)(implicit context: ExecutionContext): Future[Path] = future {
+  def ungzipFile(gzipFilePath: Path, unzipDirectory: Path)(implicit context: ExecutionContext): Future[Path] = future {
     val zipInputStream = new GZIPInputStream(new FileInputStream(gzipFilePath.toString))
 
     Files.createDirectories(unzipDirectory)
