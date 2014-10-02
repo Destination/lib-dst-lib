@@ -15,8 +15,6 @@ import org.apache.commons.io.IOUtils
 import java.nio.file.{Path, Paths}
 import java.nio.file.Files
 
-import java.nio.file.{Path, Paths}
-
 object FtpClient {
   sealed trait FileType
   case object BinaryFile extends FileType
