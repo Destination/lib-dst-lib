@@ -55,12 +55,10 @@ object XmlIterator {
   }
 }
 
-class XmlIterator(xmlPath: Path, startTag: String) extends Iterator[Option[Node]] {
+class XmlIterator(xmlPath: Path, label: String) extends Iterator[Option[Node]] {
   import scala.io.Source
 
-  require("^<.*>$".r.findFirstMatchIn(startTag).isDefined, "startTag must be a valid opening XML tag")
-
-  val endTag = startTag.replaceFirst("<", "</")
+  val (startTag, endTag) = (s"<$label>", s"</$label>")
   var offers = new XMLEventReader(scala.io.Source.fromFile(xmlPath.normalize().toString, "utf-8")) map XmlIterator.matchEvent
   var hasNext = true
 
@@ -69,7 +67,6 @@ class XmlIterator(xmlPath: Path, startTag: String) extends Iterator[Option[Node]
   } match {
     case Success(o) => Some(o)
     case Failure(t) => {
-      println(t.getMessage)
       hasNext = false
       None
     }
