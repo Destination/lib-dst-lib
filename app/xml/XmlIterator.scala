@@ -4,8 +4,9 @@ import scala.xml._
 import scala.xml.pull._
 import scala.util.{Try, Success, Failure}
 import java.nio.file.Path
+import scala.io.Source
 
-object XmlIterator {
+object XMLStream {
   import scala.xml.pull._
 
   private val interLink = """\[\[(.*)\]\]""".r
@@ -53,22 +54,15 @@ object XmlIterator {
       case _ => ""
     }
   }
-}
 
-class XmlIterator(xmlPath: Path, label: String) extends Iterator[Option[Node]] {
-  import scala.io.Source
+  def apply(xmlPath: Path, label: String): Stream[Node] = {
 
-  val (startTag, endTag) = (s"<$label>", s"</$label>")
-  var offers = new XMLEventReader(scala.io.Source.fromFile(xmlPath.normalize().toString, "utf-8")) map XmlIterator.matchEvent
-  var hasNext = true
+    val (startTag, endTag) = (s"<$label>", s"</$label>")
+    var offers = new XMLEventReader(scala.io.Source.fromFile(xmlPath.normalize().toString, "utf-8")) map matchEvent
+  
 
-  def next = Try {
-    XML.loadString(offers.dropWhile(_ != startTag).takeWhile(_ != endTag).mkString + endTag)
-  } match {
-    case Success(o) => Some(o)
-    case Failure(t) => {
-      hasNext = false
-      None
+    Stream.continually {
+      XML.loadString(offers.dropWhile(_ != startTag).takeWhile(_ != endTag).mkString + endTag)
     }
   }
 }
