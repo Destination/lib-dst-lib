@@ -38,13 +38,17 @@ object XMLStream {
     }
   }
 
-  def apply(xmlPath: Path, label: String): Stream[Node] = {
-
+  def apply(xmlPath: Path, label: String) = {
     val (startTag, endTag) = (s"<$label>", s"</$label>")
     val offers = new XMLEventReader(scala.io.Source.fromFile(xmlPath.normalize().toString, "utf-8")) map matchEvent
 
     Stream.continually {
-      XML.loadString(offers.dropWhile(_ != startTag).takeWhile(_ != endTag).mkString + endTag)
+      offers.dropWhile(_ != startTag).takeWhile(_ != endTag).mkString + endTag match {
+        case `endTag` => Stream.empty
+        case offerString => {
+          XML.loadString(offerString)
+        }
+      }
     }
   }
 }
