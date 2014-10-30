@@ -6,10 +6,10 @@ import scala.util.{Try, Success, Failure}
 import java.nio.file.Path
 import scala.io.Source
 
+import scala.io.Source
+
 object XMLStream {
   import scala.xml.pull._
-
-  private var readingText = false
  
   private def backToXml(ev: XMLEvent) = {
     ev match {
@@ -22,7 +22,7 @@ object XMLStream {
       case _ => ""
     }
   }
- 
+
   private def attrsToString(attrs:MetaData) = {
     attrs.length match {
       case 0 => ""
@@ -32,7 +32,16 @@ object XMLStream {
 
   private def matchEvent(ev: XMLEvent): String = {
     ev match {
+      case EvElemStart(_, "text", _, _) => {
+        backToXml(ev)
+      }
       case EvElemStart(_, _, _, _) => { backToXml(ev) }
+      case EvText(text) => {
+        text
+      } 
+      case EvElemEnd(_, "text") => {
+        backToXml(ev)
+      }
       case EvElemEnd(_, _) => { backToXml(ev) }
       case _ => ""
     }
@@ -52,3 +61,5 @@ object XMLStream {
     }
   }
 }
+
+val offers = XMLStream(java.nio.file.Paths.get("/Users/ludgis/solresor/SolresorSistaMinuten.XML"), "Charter")
