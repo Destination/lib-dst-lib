@@ -61,5 +61,3 @@ object XMLStream {
     }
   }
 }
-
-val offers = XMLStream(java.nio.file.Paths.get("/Users/ludgis/solresor/SolresorSistaMinuten.XML"), "Charter")
