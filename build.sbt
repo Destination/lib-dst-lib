@@ -2,7 +2,7 @@ name := "dst-lib"
 
 organization := "se.destination"
 
-version := "1.31"
+version := "1.32"
 
 scalaVersion := "2.10.2"
 

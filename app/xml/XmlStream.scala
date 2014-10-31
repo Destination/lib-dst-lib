@@ -58,6 +58,6 @@ object XMLStream {
           XML.loadString(offerString)
         }
       }
-    }
+    } takeWhile (_ != Stream.empty)
   }
 }
