@@ -2,9 +2,15 @@ name := "dst-lib"
 
 organization := "se.destination"
 
-version := "1.32"
+version := "1.4-SNAPSHOT"
 
-scalaVersion := "2.10.2"
+publishTo := {
+  val repoPath = Path.userHome.absolutePath + "/Dropbox/Destination/dst_maven"
+  if (version.value.trim.endsWith("SNAPSHOT"))
+    Some(Resolver.file("file", new File(repoPath + "/snapshots"))(Resolver.ivyStylePatterns))
+  else
+    Some(Resolver.file("file", new File(repoPath + "/releases"))(Resolver.ivyStylePatterns))
+}
 
 libraryDependencies ++= Seq(
   "commons-net" % "commons-net" % "3.2",
