@@ -24,7 +24,7 @@ object TolerantFutureCollection {
 
   /**
    * Transforms a `GenTraversableOnce[A]` into a `Future[GenTraversableOnce[B]]` using the provided function `A => Future[B]`.
-   * The returned collection will eventual value contains the results of each future.
+   * The returned collection will eventually value contains the results of each future.
    *
    * <pre>
    * {@code
@@ -48,7 +48,7 @@ object TolerantFutureCollection {
 
   /**
    * Transforms a `GenTraversableOnce[A]` into a `Future[GenTraversableOnce[B]]` using the provided function `A => Future[B]`.
-   * The returned collection will eventual value contains the results of each successful future and the failed
+   * The returned collection will eventually value contains the results of each successful future and the failed
    * futures will be discarded.
    *
    * <pre>
@@ -66,7 +66,7 @@ object TolerantFutureCollection {
   /**
    * Transforms a `GenTraversableOnce[Future[A]]` into a `Future[GenTraversableOnce[A]]`.
    * Useful for reducing many `Future`s into a single `Future` and make sure all successful futures are executed.
-   * The returned collection will eventual value contains the results of each future.
+   * The returned collection will eventually value contains the results of each future.
    *
    * <pre>
    * {@code
@@ -84,7 +84,7 @@ object TolerantFutureCollection {
   /**
    * Transforms a `GenTraversableOnce[Future[A]]` into a `Future[GenTraversableOnce[A]]`.
    * Useful for reducing many `Future`s into a single `Future` and make sure all successful futures are executed.
-   * The returned collection will eventual value contains the results of each successful future and the failed
+   * The returned collection will eventually value contains the results of each successful future and the failed
    * futures will be discarded.
    *
    * <pre>
