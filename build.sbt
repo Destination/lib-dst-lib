@@ -2,7 +2,7 @@ name := "dst-lib"
 
 organization := "se.destination"
 
-version := "1.6-SNAPSHOT"
+version := "1.6"
 
 libraryDependencies ++= Seq(
   "commons-net" % "commons-net" % "3.3",
