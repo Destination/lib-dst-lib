@@ -37,8 +37,8 @@ object XMLStream {
       case EvText(text) => {
         text
       }
-      case EvEntityRef(entity) => {
-        entity
+      case EvEntityRef("amp") => {
+        "&amp;"
       }
       case EvElemEnd(_, "text") => {
         backToXml(ev)
