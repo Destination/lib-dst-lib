@@ -1,6 +1,7 @@
 package dst.lib.io
 
 import play.api.Play
+import play.Logger
 
 import scala.concurrent._
 import scala.concurrent.duration._
@@ -28,7 +29,7 @@ class FtpClient(host: String, port: Int, user: String, password: String) {
     Files.createDirectories(localDirectory)
 
     val remoteFilePath = Paths.get(remoteFile)
-    val remoteDirectory = remoteFilePath.getParent.toString
+    val remoteDirectory = Option(remoteFilePath.getParent).map(_.toString)
 
     for {
       ftpClient         <- connect()(context)
@@ -36,7 +37,7 @@ class FtpClient(host: String, port: Int, user: String, password: String) {
         setFileType(ftpClient, fileType)
         ftpClient.enterLocalPassiveMode()
         ftpClient.setAutodetectUTF8(true)
-        ftpClient.changeWorkingDirectory(remoteDirectory)
+        remoteDirectory map { remoteDirectory => ftpClient.changeWorkingDirectory(remoteDirectory) }
       }
       localFile         <- downloadFile(remoteFilePath.getFileName.toString, localDirectory)(ftpClient, context)
       loggedOut         <- future{ ftpClient.logout }
